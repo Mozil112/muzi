@@ -1,0 +1,72 @@
+package com.homedepot.tests;
+
+import com.homedepot.pages.HomeDepotRegistrationPage;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import java.util.concurrent.TimeUnit;
+
+public class HomeDepotRegistrationTest {
+
+    private WebDriver driver;
+    private HomeDepotRegistrationPage registrationPage;
+
+    @BeforeTest
+    public void setUp() {
+        // Set up the WebDriver for Firefox
+        System.setProperty("webdriver.gecko.driver", "path/to/geckodriver");
+        driver = new FirefoxDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.get("https://homedepot.com/en/account/register.html");
+
+        // Initialize the registration page
+        registrationPage = new HomeDepotRegistrationPage(driver);
+    }
+
+    @DataProvider(name = "registrationData")
+    public Object[][] getRegistrationData() {
+        return new Object[][]{
+                {"John", "Doe", "john.doe@example.com", "password123", "password123"},
+                {"Jane", "Doe", "jane.doe@example.com", "password456", "password456"},
+                {"Bob", "Smith", "bob.smith@example.com", "password789", "password789"}
+        };
+    }
+
+    @Test(dataProvider = "registrationData")
+    public void register(String firstName, String lastName, String email, String password, String confirmPassword) {
+        // Enter the registration data
+        registrationPage.enterFirstName(firstName);
+        registrationPage.enterLastName(lastName);
+        registrationPage.enterEmail(email);
+        registrationPage.enterPassword(password);
+        registrationPage.enterConfirmPassword(confirmPassword);
+
+        // Click the register button
+        registrationPage.clickRegisterButton();
+
+        // Add assertions here to verify that the registration was successful
+    }
+
+    @Test
+    public void registerWithChrome() {
+        // Set up the WebDriver for Chrome
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        // Initialize the registration page
+        registrationPage = new HomeDepotRegistrationPage(driver);
+
+        // Enter the registration data
+        registrationPage.enterFirstName("John");
+        registrationPage.enterLastName("Doe");
+        registrationPage.enterEmail("john.doe@example.com");
+        registrationPage.enterPassword("password123");
+        registrationPage.enterConfirmPassword("password123");
+
+        // Click the register
